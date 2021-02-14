@@ -18,10 +18,10 @@ import javax.persistence.*;
 public class Schedules {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private String id;
 
     @OneToOne
-    @JoinColumn(name = "customers_id", referencedColumnName = "id", unique = true)
+    @JoinColumn(name = "customer_id", referencedColumnName = "id", unique = true)
     private Customers customer_id;
 
     @Enumerated(EnumType.STRING)

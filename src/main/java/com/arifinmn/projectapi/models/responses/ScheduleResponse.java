@@ -1,4 +1,4 @@
-package com.arifinmn.projectapi.models.requests;
+package com.arifinmn.projectapi.models.responses;
 
 import com.arifinmn.projectapi.configs.constans.Service;
 import lombok.AllArgsConstructor;
@@ -6,28 +6,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CustomerRequest {
+public class ScheduleResponse {
     private Integer id;
-
-    @NotNull
+    private Integer customer_id;
     private String name;
-
-    @NotNull
     private String phone;
-
-    @NotNull
-    @Email
     private String email;
-
-    @NotNull
+    private String status;
     private String service;
+
 }

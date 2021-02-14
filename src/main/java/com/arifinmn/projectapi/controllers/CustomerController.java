@@ -5,7 +5,6 @@ import com.arifinmn.projectapi.entities.Customers;
 import com.arifinmn.projectapi.models.requests.CustomerRequest;
 import com.arifinmn.projectapi.models.searchs.CustomerSearch;
 import com.arifinmn.projectapi.services.ICustomerService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
