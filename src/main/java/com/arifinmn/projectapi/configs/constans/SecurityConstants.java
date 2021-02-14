@@ -1,4 +1,4 @@
-package com.arifinmn.projectapi.security;
+package com.arifinmn.projectapi.configs.constans;
 
 public class SecurityConstants {
     public static final String SECRET = "SecretKeyToGenJWTs";

@@ -17,9 +17,10 @@ import javax.persistence.*;
 @Table(name = "customers")
 public class Customers {
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    private String name;
 
     private String phone;
 

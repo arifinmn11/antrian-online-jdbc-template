@@ -14,15 +14,14 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "services")
+@Table(name = "schedules")
 public class Schedules {
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     @OneToOne
-    @JoinColumn(name = "customers_id", referencedColumnName = "id")
+    @JoinColumn(name = "customers_id", referencedColumnName = "id", unique = true)
     private Customers customer_id;
 
     @Enumerated(EnumType.STRING)
