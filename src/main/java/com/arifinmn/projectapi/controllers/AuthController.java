@@ -1,8 +1,9 @@
 package com.arifinmn.projectapi.controllers;
 
 import com.arifinmn.projectapi.configs.JwtToken;
-import com.arifinmn.projectapi.models.JwtRequest;
-import com.arifinmn.projectapi.models.JwtResponse;
+import com.arifinmn.projectapi.models.requests.JwtRequest;
+import com.arifinmn.projectapi.models.responses.JwtResponse;
+import com.arifinmn.projectapi.services.IUserService;
 import com.arifinmn.projectapi.services.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +28,16 @@ public class AuthController {
     @Autowired
     private JwtUserDetailsService jwtUserDetailsService;
 
+    @Autowired
+    private IUserService service;
 
-    @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
+
+//    @PostMapping("/login")
+//    public ResponseEntity<?> loginGetToken(@RequestBody JwtRequest request) throws Exception {
+//        authenticate(request.getUsername(), request.getPassword());
+//    }
+
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
 
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());

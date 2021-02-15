@@ -1,7 +1,11 @@
 package com.arifinmn.projectapi.controllers;
 
 import com.arifinmn.projectapi.entities.Users;
+import com.arifinmn.projectapi.models.responses.ResponseMessage;
 import com.arifinmn.projectapi.repositories.UserRepository;
+import com.arifinmn.projectapi.services.IUserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,34 +14,21 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class UserController {
 
-    private UserRepository userRepository;
+    @Autowired
+    UserRepository userRepository;
 
-
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-
-    @PostMapping("/user")
-    public Boolean create(@RequestBody Map<String, String> body) throws NoSuchAlgorithmException {
+    @PostMapping("/create")
+    public ResponseMessage<?> create(@RequestBody Map<String, String> body) throws NoSuchAlgorithmException {
         String username = body.get("username");
-        if (userRepository.existsByUsername(username)) {
-            throw new ValidationException("Username already existed");
-        }
-
         String password = body.get("password");
-        String encodedPassword = new BCryptPasswordEncoder().encode(password);
-//        String hashedPassword = hashData.get_SHA_512_SecurePassword(password);
-        String fullname = body.get("fullname");
-        userRepository.save(new Users(username, encodedPassword, fullname));
-        return true;
-    }
+        String fullName = body.get("fullname");
 
-    @GetMapping("/test")
-    public String test() {
-        return "ini test";
+        String encodedPassword = new BCryptPasswordEncoder().encode(password);
+
+        Users entity = userRepository.save(new Users(username, encodedPassword, fullName));
+        return ResponseMessage.success(entity);
     }
 }

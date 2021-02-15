@@ -2,14 +2,19 @@ package com.arifinmn.projectapi.controllers;
 
 import com.arifinmn.projectapi.configs.constans.Service;
 import com.arifinmn.projectapi.entities.Customers;
+import com.arifinmn.projectapi.exceptions.ApplicationExceptions;
+import com.arifinmn.projectapi.exceptions.EntityNotFoundException;
 import com.arifinmn.projectapi.models.requests.CustomerRequest;
 import com.arifinmn.projectapi.models.searchs.CustomerSearch;
 import com.arifinmn.projectapi.services.ICustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import com.arifinmn.projectapi.models.responses.ResponseMessage;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @CrossOrigin
 @RestController
@@ -20,7 +25,7 @@ public class CustomerController {
     ICustomerService service;
 
     @PostMapping("/create")
-    public ResponseEntity<?> createCustomer(@RequestBody @Valid CustomerRequest request) {
+    public ResponseMessage<?> createCustomer(@RequestBody CustomerRequest request) {
         Customers entity = new Customers();
         entity.setName(request.getName());
         entity.setEmail(request.getEmail());
@@ -37,22 +42,18 @@ public class CustomerController {
                 entity.setService(Service.PERBAIKAN_KTP);
                 break;
             default:
-                throw new RuntimeException("Input service not valid!");
+                throw new ApplicationExceptions(HttpStatus.BAD_REQUEST, "input service not valid!");
         }
 
-        if (service.createNewCustomer(entity)) {
-            return ResponseEntity.ok(entity);
-        }
-        return ResponseEntity.ok(
-                ResponseEntity.badRequest()
-        );
+        service.createNewCustomer(entity);
 
+        return ResponseMessage.success(entity);
     }
 
     @PutMapping("/{id}/update")
-    public ResponseEntity<?> updateCustomerById(@RequestBody @Valid CustomerRequest request, @PathVariable Integer id) {
+    public ResponseMessage<?> updateCustomerById(@RequestBody @Valid CustomerRequest request, @PathVariable Integer id) {
         Customers entity = new Customers();
-        entity.setId(request.getId());
+        entity.setId(id);
         entity.setName(request.getName());
         entity.setPhone(request.getPhone());
         entity.setEmail(request.getEmail());
@@ -71,34 +72,40 @@ public class CustomerController {
                 throw new RuntimeException("Input service not valid!");
         }
 
-        if (service.createNewCustomer(entity)) {
-            return ResponseEntity.ok(entity);
-        }
-        return ResponseEntity.ok(
-                ResponseEntity.badRequest()
-        );
+        service.updateCustomer(entity);
+
+        return ResponseMessage.success(entity);
+
     }
 
     @GetMapping("/{id}/get")
-    public ResponseEntity<?> getCustomerById(@PathVariable Integer id) {
+    public ResponseMessage<?> getCustomerById(@PathVariable Integer id) {
         Customers entity = service.getCustomerById(id);
         if (entity == null) {
-            return ResponseEntity.ok(ResponseEntity.badRequest());
+            throw new EntityNotFoundException();
         }
-        return ResponseEntity.ok(entity);
+        return ResponseMessage.success(entity);
     }
 
     @GetMapping()
-    public ResponseEntity<?> getCustomers(CustomerSearch search) {
-        return ResponseEntity.ok(service.getAllCustomer());
+    public ResponseMessage<?> getCustomers(CustomerSearch search) {
+        List<Customers> customerList = service.getAllCustomer();
+        List<Customers> filterList = customerList.stream()
+                .filter(c -> c.getName().startsWith(search.getName()) ||
+                        c.getEmail().startsWith(search.getEmail()) ||
+                        c.getService().toString().startsWith(search.getService()) ||
+                        c.getPhone().startsWith(search.getPhone())
+                )
+                .collect(Collectors.toList());
+        return ResponseMessage.success(filterList);
     }
 
     @DeleteMapping("/{id}/delete")
-    public ResponseEntity<?> deleteCustomerById(@PathVariable Integer id) {
-        if(service.removeCustomerById(id)) {
-            return ResponseEntity.ok("Has been deleted!");
+    public ResponseMessage<?> deleteCustomerById(@PathVariable Integer id) {
+        if (service.removeCustomerById(id)) {
+            return ResponseMessage.success("Has been deleted!");
         }
-        return ResponseEntity.ok(ResponseEntity.badRequest());
+        throw new ApplicationExceptions(HttpStatus.INTERNAL_SERVER_ERROR, "Entity not delete!!");
     }
 
 }

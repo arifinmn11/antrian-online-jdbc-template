@@ -1,4 +1,4 @@
-package com.arifinmn.projectapi.models;
+package com.arifinmn.projectapi.models.requests;
 
 import java.io.Serializable;
 

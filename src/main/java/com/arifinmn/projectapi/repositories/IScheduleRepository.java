@@ -1,6 +1,5 @@
 package com.arifinmn.projectapi.repositories;
 
-import com.arifinmn.projectapi.entities.Schedules;
 import com.arifinmn.projectapi.models.ScheduleModel;
 import com.arifinmn.projectapi.models.responses.ScheduleResponse;
 

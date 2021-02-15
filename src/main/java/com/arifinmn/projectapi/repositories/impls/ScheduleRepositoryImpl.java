@@ -1,8 +1,6 @@
 package com.arifinmn.projectapi.repositories.impls;
 
-import com.arifinmn.projectapi.configs.constans.Service;
-import com.arifinmn.projectapi.entities.Customers;
-import com.arifinmn.projectapi.entities.Schedules;
+import com.arifinmn.projectapi.exceptions.EntityNotFoundException;
 import com.arifinmn.projectapi.models.ScheduleModel;
 import com.arifinmn.projectapi.models.responses.ScheduleResponse;
 import com.arifinmn.projectapi.repositories.IScheduleRepository;
