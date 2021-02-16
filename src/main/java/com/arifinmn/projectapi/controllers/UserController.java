@@ -29,7 +29,7 @@ public class UserController {
         String username = request.getUsername();
         String password = request.getPassword();
         String fullName = request.getFullName();
-
+        System.out.println(fullName);
         if (!request.getCode().equalsIgnoreCase("ADMIN")) {
             throw new ApplicationExceptions(HttpStatus.BAD_REQUEST, "Something wrong input!");
         }

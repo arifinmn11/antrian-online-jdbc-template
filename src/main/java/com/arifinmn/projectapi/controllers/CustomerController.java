@@ -29,7 +29,7 @@ public class CustomerController {
     IRegisterCustomerService registerService;
 
     @PostMapping("/register")
-    public ResponseMessage<?> registerCustomer(@RequestBody CustomerRequest request) {
+    public ResponseMessage<?> registerCustomer(@RequestBody @Valid CustomerRequest request) {
         Customers entity = new Customers();
         entity.setName(request.getName());
         entity.setEmail(request.getEmail());
@@ -120,9 +120,9 @@ public class CustomerController {
     public ResponseMessage<?> getCustomers(CustomerSearch search) {
         List<Customers> customerList = service.getAllCustomer();
         List<Customers> filterList = customerList.stream()
-                .filter(c -> c.getName().startsWith(search.getName()) ||
-                        c.getEmail().startsWith(search.getEmail()) ||
-                        c.getService().toString().startsWith(search.getService()) ||
+                .filter(c -> c.getName().startsWith(search.getName()) &&
+                        c.getEmail().startsWith(search.getEmail()) &&
+                        c.getService().toString().startsWith(search.getService()) &&
                         c.getPhone().startsWith(search.getPhone())
                 )
                 .collect(Collectors.toList());
