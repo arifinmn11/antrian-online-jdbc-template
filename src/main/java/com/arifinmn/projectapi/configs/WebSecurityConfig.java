@@ -56,24 +56,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     }
 
-//    @Override
-//    public void configure(WebSecurity web) throws Exception {
-//        web.ignoring().antMatchers("/swagger-ui.html");
-//    }
-
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/**").permitAll()
-//                .antMatchers("/users/user").permitAll()
-//                .antMatchers("/api/**").permitAll()
-//                .antMatchers("/users/user").permitAll()
-//                .antMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                .anyRequest().permitAll();
-//                .and()
-//                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
-//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .antMatchers(HttpMethod.DELETE).authenticated()
+                .antMatchers(HttpMethod.PUT).authenticated()
+                .anyRequest().permitAll()
+                .and()
+                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 

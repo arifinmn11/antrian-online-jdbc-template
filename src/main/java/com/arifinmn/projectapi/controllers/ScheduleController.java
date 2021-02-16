@@ -39,7 +39,6 @@ public class ScheduleController {
 
     @PostMapping("/create")
     public ResponseMessage<?> createSchedule(@RequestBody @Valid ScheduleModel model) {
-
         switch (model.getStatus().toUpperCase()) {
             case "PENDING":
                 model.setStatus(Statuses.PENDING.toString());
@@ -90,5 +89,12 @@ public class ScheduleController {
         return ResponseMessage.success(model);
     }
 
+    @DeleteMapping("/{id}/delete")
+    public ResponseMessage<?> deleteCustomerById(@PathVariable Integer id) {
+        if (service.removeScheduleById(id)) {
+            return ResponseMessage.success("Has been deleted!");
+        }
+        throw new ApplicationExceptions(HttpStatus.INTERNAL_SERVER_ERROR, "Entity not delete!!");
+    }
 
 }

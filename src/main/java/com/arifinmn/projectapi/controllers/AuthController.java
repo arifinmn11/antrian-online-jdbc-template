@@ -1,11 +1,13 @@
 package com.arifinmn.projectapi.controllers;
 
 import com.arifinmn.projectapi.configs.JwtToken;
+import com.arifinmn.projectapi.exceptions.ApplicationExceptions;
 import com.arifinmn.projectapi.models.requests.JwtRequest;
 import com.arifinmn.projectapi.models.responses.JwtResponse;
 import com.arifinmn.projectapi.services.IUserService;
 import com.arifinmn.projectapi.services.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -17,6 +19,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 
 @RestController
 @CrossOrigin
+@RequestMapping("/api/")
 public class AuthController {
 
     @Autowired
@@ -30,12 +33,6 @@ public class AuthController {
 
     @Autowired
     private IUserService service;
-
-
-//    @PostMapping("/login")
-//    public ResponseEntity<?> loginGetToken(@RequestBody JwtRequest request) throws Exception {
-//        authenticate(request.getUsername(), request.getPassword());
-//    }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
@@ -60,11 +57,12 @@ public class AuthController {
 
         } catch (DisabledException e) {
 
-            throw new Exception("USER_DISABLED", e);
+
+            throw new ApplicationExceptions(HttpStatus.NOT_ACCEPTABLE, "Something wrong, user disable");
 
         } catch (BadCredentialsException e) {
 
-            throw new Exception("INVALID_CREDENTIALS", e);
+            throw new ApplicationExceptions(HttpStatus.UNAVAILABLE_FOR_LEGAL_REASONS, "Something wrong, INVALID_CREDENTIALS");
 
         }
 
