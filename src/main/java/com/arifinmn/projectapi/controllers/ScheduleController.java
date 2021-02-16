@@ -66,8 +66,6 @@ public class ScheduleController {
         model.setId(id);
         model.setStatus(request.getStatus());
 
-        System.out.println(id);
-
         if (service.getScheduleById(id) != null) {
             throw new EntityNotFoundException();
         }
@@ -91,4 +89,6 @@ public class ScheduleController {
 
         return ResponseMessage.success(model);
     }
+
+
 }

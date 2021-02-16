@@ -7,6 +7,7 @@ import com.arifinmn.projectapi.exceptions.EntityNotFoundException;
 import com.arifinmn.projectapi.models.requests.CustomerRequest;
 import com.arifinmn.projectapi.models.searchs.CustomerSearch;
 import com.arifinmn.projectapi.services.ICustomerService;
+import com.arifinmn.projectapi.services.IRegisterCustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.arifinmn.projectapi.models.responses.ResponseMessage;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,35 @@ public class CustomerController {
 
     @Autowired
     ICustomerService service;
+
+    @Autowired
+    IRegisterCustomerService registerService;
+
+    @PostMapping("/register")
+    public ResponseMessage<?> registerCustomer(@RequestBody CustomerRequest request) {
+        Customers entity = new Customers();
+        entity.setName(request.getName());
+        entity.setEmail(request.getEmail());
+        entity.setPhone(request.getPhone());
+
+        switch (request.getService().toUpperCase()) {
+            case "PENGADUAN":
+                entity.setService(Service.PENGADUAN);
+                break;
+            case "PENDAFTARAN":
+                entity.setService(Service.PENDAFTARAN_KTP);
+                break;
+            case "PERBAIKAN":
+                entity.setService(Service.PERBAIKAN_KTP);
+                break;
+            default:
+                throw new ApplicationExceptions(HttpStatus.BAD_REQUEST, "input service not valid!");
+        }
+
+        registerService.createNewCustomer(entity);
+
+        return ResponseMessage.success(entity);
+    }
 
     @PostMapping("/create")
     public ResponseMessage<?> createCustomer(@RequestBody CustomerRequest request) {
