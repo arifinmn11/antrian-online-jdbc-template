@@ -10,8 +10,11 @@ Go the folder
 application.yaml
 
 ## Run the application
-
+```
 mvn clean spring-boot:run
-
-This is a simple API for recording inventory items using spring-boot.
-
+```
+## Docs API
+Open the swagger docs at this URL for a list of available API endpoints. To get an authorization token, use signup then signin.
+```
+http://localhost:8080/api/swagger-ui.html
+```
