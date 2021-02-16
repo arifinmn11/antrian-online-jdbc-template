@@ -21,13 +21,13 @@ public class ScheduleServiceImpl implements IScheduleService {
     }
 
     @Override
-    public boolean createNewSchedule(ScheduleModel schedule) {
-        return repository.add(schedule);
+    public void createNewSchedule(ScheduleModel schedule) {
+        repository.save(schedule);
     }
 
     @Override
-    public boolean updateSchedule(ScheduleModel schedule) {
-        return repository.update(schedule);
+    public void updateSchedule(ScheduleModel schedule) {
+        repository.save(schedule);
     }
 
     @Override

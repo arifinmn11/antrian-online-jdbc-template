@@ -63,7 +63,11 @@ public class ScheduleController {
     @PutMapping("/{id}/update")
     public ResponseMessage<?> updateSchedule(@PathVariable Integer id, @RequestBody @Valid ScheduleRequest request) {
         ScheduleModel model = new ScheduleModel();
+        model.setId(id);
         model.setStatus(request.getStatus());
+
+        System.out.println(id);
+
         if (service.getScheduleById(id) != null) {
             throw new EntityNotFoundException();
         }
@@ -84,8 +88,6 @@ public class ScheduleController {
             default:
                 throw new ApplicationExceptions(HttpStatus.BAD_REQUEST,"Input service not valid!");
         }
-
-        model.setId(id);
 
         return ResponseMessage.success(model);
     }

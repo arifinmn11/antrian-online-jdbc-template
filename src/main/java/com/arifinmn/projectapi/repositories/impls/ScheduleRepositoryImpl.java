@@ -1,5 +1,6 @@
 package com.arifinmn.projectapi.repositories.impls;
 
+import com.arifinmn.projectapi.entities.Customers;
 import com.arifinmn.projectapi.exceptions.EntityNotFoundException;
 import com.arifinmn.projectapi.models.ScheduleModel;
 import com.arifinmn.projectapi.models.responses.ScheduleResponse;
@@ -7,11 +8,15 @@ import com.arifinmn.projectapi.repositories.IScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class ScheduleRepositoryImpl implements IScheduleRepository {
@@ -20,24 +25,28 @@ public class ScheduleRepositoryImpl implements IScheduleRepository {
     JdbcTemplate jdbcTemplate;
 
     @Override
-    public boolean add(ScheduleModel schedule) {
-        String sqlQuery = "INSERT INTO schedules (status, customer_id) values (?,?)";
-        Integer status = jdbcTemplate.update(sqlQuery, schedule.getStatus(), schedule.getCustomer_id());
-        if (status == 1) {
-            return true;
+    public void save(ScheduleModel entity) {
+        if (entity.getId() == null) {
+            String sql = "INSERT INTO schedules (status, customer_id) values (?,?)";
+            KeyHolder keyHolder = new GeneratedKeyHolder();
+            jdbcTemplate.update(connection -> {
+                PreparedStatement stmt = connection.prepareStatement(sql, new String[]{"id"});
+                stmt.setString(1, entity.getStatus());
+                stmt.setInt(2, entity.getCustomer_id());
+                return stmt;
+            }, keyHolder);
+            int id = Objects.requireNonNull(keyHolder.getKey()).intValue();
+            entity.setId(id);
+        } else {
+            String sql = "UPDATE schedules SET  status =?,  customer_id=? where id=?";
+            jdbcTemplate.update(connection -> {
+                PreparedStatement stmt = connection.prepareStatement(sql);
+                stmt.setString(1, entity.getStatus().toString());
+                stmt.setInt(2, entity.getCustomer_id());
+                stmt.setInt(3, entity.getId());
+                return stmt;
+            });
         }
-        return false;
-    }
-
-    @Override
-    public boolean update(ScheduleModel schedule) {
-        String sqlQuery = "UPDATE schedules SET  status =?,  customer_id=? where id=?";
-        Integer status = jdbcTemplate.update(sqlQuery, schedule.getStatus(), schedule.getCustomer_id(), schedule.getId());
-
-        if (status == 1) {
-            return true;
-        }
-        return false;
     }
 
     @Override

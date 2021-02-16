@@ -69,9 +69,8 @@ public class CustomerController {
                 entity.setService(Service.PERBAIKAN_KTP);
                 break;
             default:
-                throw new RuntimeException("Input service not valid!");
+                throw new ApplicationExceptions(HttpStatus.BAD_REQUEST, "Input service not valid!");
         }
-
         service.updateCustomer(entity);
 
         return ResponseMessage.success(entity);

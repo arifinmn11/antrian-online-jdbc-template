@@ -5,9 +5,9 @@ import com.arifinmn.projectapi.entities.Customers;
 import java.util.List;
 
 public interface ICustomerService {
-    boolean createNewCustomer(Customers customer);
+    void createNewCustomer(Customers customer);
 
-    boolean updateCustomer(Customers customers);
+    void updateCustomer(Customers customers);
 
     boolean removeCustomerById(Integer id);
 

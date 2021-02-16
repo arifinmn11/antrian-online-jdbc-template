@@ -9,9 +9,9 @@ import java.util.List;
 public interface IScheduleService {
     void createBulkSchedule(List<Schedules> schedules);
 
-    boolean createNewSchedule(ScheduleModel schedule);
+    void createNewSchedule(ScheduleModel schedule);
 
-    boolean updateSchedule(ScheduleModel schedule);
+    void updateSchedule(ScheduleModel schedule);
 
     boolean removeScheduleById(Integer id);
 

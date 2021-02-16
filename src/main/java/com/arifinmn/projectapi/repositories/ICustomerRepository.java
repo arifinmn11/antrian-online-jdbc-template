@@ -6,9 +6,7 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 public interface ICustomerRepository {
-    boolean add(Customers customer);
-
-    boolean update(Customers customers);
+    void save(Customers customer);
 
     boolean removeById(Integer id);
 

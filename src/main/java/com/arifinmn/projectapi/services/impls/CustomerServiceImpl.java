@@ -14,13 +14,13 @@ public class CustomerServiceImpl implements ICustomerService {
     ICustomerRepository customerRepository;
 
     @Override
-    public boolean createNewCustomer(Customers customer) {
-        return customerRepository.add(customer);
+    public void createNewCustomer(Customers customer) {
+        customerRepository.save(customer);
     }
 
     @Override
-    public boolean updateCustomer(Customers customers) {
-        return customerRepository.update(customers);
+    public void updateCustomer(Customers customers) {
+        customerRepository.save(customers);
     }
 
     @Override
