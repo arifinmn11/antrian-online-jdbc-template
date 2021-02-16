@@ -1,12 +1,14 @@
 package com.arifinmn.projectapi.controllers;
 
 import com.arifinmn.projectapi.configs.constans.Statuses;
+import com.arifinmn.projectapi.entities.Customers;
 import com.arifinmn.projectapi.exceptions.ApplicationExceptions;
 import com.arifinmn.projectapi.exceptions.EntityNotFoundException;
 import com.arifinmn.projectapi.models.ScheduleModel;
 import com.arifinmn.projectapi.models.requests.ScheduleRequest;
 import com.arifinmn.projectapi.models.responses.ResponseMessage;
 import com.arifinmn.projectapi.models.responses.ScheduleResponse;
+import com.arifinmn.projectapi.models.searchs.ScheduleSearch;
 import com.arifinmn.projectapi.services.IScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @CrossOrigin
 @RestController
@@ -32,9 +35,16 @@ public class ScheduleController {
     }
 
     @GetMapping()
-    public ResponseMessage<?> getSchedules() {
+    public ResponseMessage<?> getSchedules(ScheduleSearch search) {
         List<ScheduleResponse> entities = service.getAllSchedule();
-        return ResponseMessage.success(entities);
+        List<ScheduleResponse> filterList = entities.stream()
+                .filter(c -> c.getName().startsWith(search.getName()) &&
+                        c.getEmail().startsWith(search.getEmail()) &&
+                        c.getService().toString().startsWith(search.getService()) &&
+                        c.getPhone().startsWith(search.getPhone())
+                )
+                .collect(Collectors.toList());
+        return ResponseMessage.success(filterList);
     }
 
     @PostMapping("/create")
@@ -83,7 +93,7 @@ public class ScheduleController {
                 model.setStatus(Statuses.FAIL.toString());
                 break;
             default:
-                throw new ApplicationExceptions(HttpStatus.BAD_REQUEST,"Input service not valid!");
+                throw new ApplicationExceptions(HttpStatus.BAD_REQUEST, "Input service not valid!");
         }
 
         return ResponseMessage.success(model);

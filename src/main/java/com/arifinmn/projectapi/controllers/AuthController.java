@@ -4,6 +4,7 @@ import com.arifinmn.projectapi.configs.JwtToken;
 import com.arifinmn.projectapi.exceptions.ApplicationExceptions;
 import com.arifinmn.projectapi.models.requests.JwtRequest;
 import com.arifinmn.projectapi.models.responses.JwtResponse;
+import com.arifinmn.projectapi.models.responses.ResponseMessage;
 import com.arifinmn.projectapi.services.IUserService;
 import com.arifinmn.projectapi.services.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ public class AuthController {
     private IUserService service;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
+    public ResponseMessage<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
 
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 
@@ -45,7 +46,7 @@ public class AuthController {
 
         final String token = jwtToken.generateToken(userDetails);
 
-        return ResponseEntity.ok(new JwtResponse(token));
+        return ResponseMessage.success(new JwtResponse(token));
 
     }
 

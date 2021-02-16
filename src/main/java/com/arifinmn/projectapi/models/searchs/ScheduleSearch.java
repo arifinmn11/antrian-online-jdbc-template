@@ -9,16 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CustomerSearch {
-    private Integer id;
-
+public class ScheduleSearch {
     private String name = "";
-
-    private String phone  = "";
-
-    private String email  = "";
-
-    private String service  = "";
-
-
+    private String phone = "";
+    private String email = "";
+    private String status = "";
+    private String service = "";
 }
